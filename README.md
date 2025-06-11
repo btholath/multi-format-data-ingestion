@@ -76,5 +76,7 @@ wget https://repo1.maven.org/maven2/org/scala-lang/scala-library/2.12.18/scala-l
 deactivate
 source .venv/bin/activate
 python -m scripts.write_and_read_apache_hudi
+python -m scripts.write_and_read_apache_iceberg
+python -m scripts.write_and_read_delta_lake
 ```
 
