@@ -57,3 +57,24 @@ File outputs are in the /data directory.
 (.venv) @btholath ➜ /workspaces/multi-format-data-ingestion (main) $ python -m tests.test_recordio_utils
 ```
 
+## Generate other file formats such as apache hudi 
+```bash
+(.venv) @btholath ➜ /workspaces/multi-format-data-ingestion (main) $ java -version
+sudo apt install openjdk-17-jdk-headless
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+export PATH=$JAVA_HOME/bin:$PATH
+echo 'export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64' >> ~/.bashrc
+echo 'export PATH=$JAVA_HOME/bin:$PATH' >> ~/.bashrc
+source ~/.bashrc
+echo $JAVA_HOME
+ls -l $JAVA_HOME/bin/java
+java -version
+sudo apt-get update
+sudo apt-get install scala
+wget https://repo1.maven.org/maven2/org/scala-lang/scala-library/2.12.18/scala-library-2.12.18.jar -P $HOME/hudi_jars
+
+deactivate
+source .venv/bin/activate
+python -m scripts.write_and_read_apache_hudi
+```
+

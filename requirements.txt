@@ -8,3 +8,4 @@ numpy
 tabulate
 # For optional JSON schema validation:
 jsonschema
+pyspark
