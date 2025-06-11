@@ -1,0 +1,3 @@
+policy_id,holder_name,age,sum_assured,premium,term,plan
+LIP12345,Alice Smith,35,100000,800,20,Whole Life
+LIP67890,Bob Jones,42,150000,1200,25,Term Life

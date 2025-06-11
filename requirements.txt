@@ -1,0 +1,10 @@
+pandas
+pyarrow
+pyorc
+avro-python3
+mxnet
+numpy
+# For pretty tables or CLI outputs, optional:
+tabulate
+# For optional JSON schema validation:
+jsonschema

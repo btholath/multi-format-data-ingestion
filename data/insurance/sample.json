@@ -1,0 +1,20 @@
+[
+  {
+    "policy_id": "LIP12345",
+    "holder_name": "Alice Smith",
+    "age": 35,
+    "sum_assured": 100000,
+    "premium": 800,
+    "term": 20,
+    "plan": "Whole Life"
+  },
+  {
+    "policy_id": "LIP67890",
+    "holder_name": "Bob Jones",
+    "age": 42,
+    "sum_assured": 150000,
+    "premium": 1200,
+    "term": 25,
+    "plan": "Term Life"
+  }
+]
