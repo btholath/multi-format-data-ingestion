@@ -44,3 +44,16 @@ File outputs are in the /data directory.
 - tabulate (optional) — for prettier CLI tables
 
 - jsonschema (optional) — for JSON validation if desired
+
+
+# Run the scripts
+## Run your scripts from the project root and add -m (Recommended for local development)
+```bash
+(.venv) @btholath ➜ /workspaces/multi-format-data-ingestion (main) $ python -m scripts.write_and_read_demo
+(.venv) @btholath ➜ /workspaces/multi-format-data-ingestion (main) $ python -m tests.test_avro_utils
+(.venv) @btholath ➜ /workspaces/multi-format-data-ingestion (main) $ pytest tests/
+(.venv) @btholath ➜ /workspaces/multi-format-data-ingestion (main) $ python -m tests.test_parquet_utils
+(.venv) @btholath ➜ /workspaces/multi-format-data-ingestion (main) $ python -m tests.test_orc_utils
+(.venv) @btholath ➜ /workspaces/multi-format-data-ingestion (main) $ python -m tests.test_recordio_utils
+```
+

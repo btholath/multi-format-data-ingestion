@@ -1,95 +1,16 @@
+"""
+analyze_data.py
+
+Purpose: Analyze life insurance policy files (CSV, JSON, Parquet, ORC, Avro, RecordIO) in the data/ directory for Volume, Velocity, and Variety.
+"""
+
 import os
 import time
 import pandas as pd
 import json
 
-# --------- 1. SAMPLE DATA (life insurance policies) ---------
-sample_data = [
-    {
-        "policy_id": "LIP12345",
-        "holder_name": "Alice Smith",
-        "age": 35,
-        "sum_assured": 100000,
-        "premium": 800,
-        "term": 20,
-        "plan": "Whole Life"
-    },
-    {
-        "policy_id": "LIP67890",
-        "holder_name": "Bob Jones",
-        "age": 42,
-        "sum_assured": 150000,
-        "premium": 1200,
-        "term": 25,
-        "plan": "Term Life"
-    }
-]
+DATA_DIR = "../data/insurance"
 
-# --------- 2. FILE CREATION FUNCTIONS ---------
-def write_csv(data, filename):
-    df = pd.DataFrame(data)
-    df.to_csv(filename, index=False)
-
-def write_json(data, filename):
-    with open(filename, "w") as f:
-        json.dump(data, f, indent=2)
-
-def write_parquet(data, filename):
-    df = pd.DataFrame(data)
-    df.to_parquet(filename)
-
-def write_orc(data, filename):
-    import pyorc
-    schema = "struct<policy_id:string,holder_name:string,age:int,sum_assured:int,premium:int,term:int,plan:string>"
-    tuples = [(
-        rec["policy_id"], rec["holder_name"], rec["age"], rec["sum_assured"],
-        rec["premium"], rec["term"], rec["plan"]
-    ) for rec in data]
-    with open(filename, "wb") as f:
-        writer = pyorc.Writer(f, schema)
-        for rec in tuples:
-            writer.write(rec)
-        writer.close()
-
-def write_avro(data, filename):
-    import avro.schema, avro.datafile, avro.io
-    schema_str = """
-    {
-        "type": "record",
-        "name": "LifePolicy",
-        "fields": [
-            {"name": "policy_id", "type": "string"},
-            {"name": "holder_name", "type": "string"},
-            {"name": "age", "type": "int"},
-            {"name": "sum_assured", "type": "int"},
-            {"name": "premium", "type": "int"},
-            {"name": "term", "type": "int"},
-            {"name": "plan", "type": "string"}
-        ]
-    }
-    """
-    schema = avro.schema.parse(schema_str)
-    with open(filename, "wb") as out:
-        writer = avro.datafile.DataFileWriter(out, avro.io.DatumWriter(), schema)
-        for rec in data:
-            writer.append(rec)
-        writer.close()
-
-def write_recordio(data, filename):
-    import mxnet as mx
-    import numpy as np
-    # Flatten each record as a tuple of fields for simplicity (just numerics for demo)
-    arrays = [
-        np.array([rec["age"], rec["sum_assured"], rec["premium"], rec["term"]], dtype=np.int64)
-        for rec in data
-    ]
-    writer = mx.recordio.MXRecordIO(filename, 'w')
-    for arr in arrays:
-        s = mx.recordio.pack(mx.recordio.IRHeader(0, 0, 0, 0), arr.tobytes())
-        writer.write(s)
-    writer.close()
-
-# --------- 3. ANALYSIS FUNCTIONS (as above, same as previous script) ---------
 def analyze_csv(filename):
     print("="*10, "CSV", "="*10)
     size_bytes = os.path.getsize(filename)
@@ -179,8 +100,6 @@ def analyze_avro(filename):
     print("Avro schema:", json.loads(schema))  # Pretty-print
     print()
 
-
-
 def analyze_recordio(filename):
     import mxnet as mx
     import numpy as np
@@ -195,7 +114,7 @@ def analyze_recordio(filename):
         if item is None:
             break
         _, data = mx.recordio.unpack(item)
-        arr = np.frombuffer(data, dtype=np.int64)  # Change dtype as per your data
+        arr = np.frombuffer(data, dtype=np.int64)
         array_shapes.append(arr.shape)
         record_count += 1
     elapsed = time.time() - start
@@ -207,17 +126,9 @@ def analyze_recordio(filename):
     print()
 
 if __name__ == "__main__":
-    # 1. Write sample records in all formats
-    write_csv(sample_data, "../data/insurance/sample.csv")
-    write_json(sample_data, "../data/insurance/sample.json")
-    write_parquet(sample_data, "../data/insurance/sample.parquet")
-    write_orc(sample_data, "../data/insurance/sample.orc")
-    write_avro(sample_data, "../data/insurance/sample.avro")
-    write_recordio(sample_data, "../data/insurance/sample.rec")
-    # 2. Analyze each file
-    analyze_csv("../data/insurance/sample.csv")
-    analyze_json("../data/insurance/sample.json")
-    analyze_parquet("../data/insurance/sample.parquet")
-    analyze_orc("../data/insurance/sample.orc")
-    analyze_avro("../data/insurance/sample.avro")
-    analyze_recordio("../data/insurance/sample.rec")
+    analyze_csv(os.path.join(DATA_DIR, "sample.csv"))
+    analyze_json(os.path.join(DATA_DIR, "sample.json"))
+    analyze_parquet(os.path.join(DATA_DIR, "sample.parquet"))
+    analyze_orc(os.path.join(DATA_DIR, "sample.orc"))
+    analyze_avro(os.path.join(DATA_DIR, "sample.avro"))
+    analyze_recordio(os.path.join(DATA_DIR, "sample.rec"))
